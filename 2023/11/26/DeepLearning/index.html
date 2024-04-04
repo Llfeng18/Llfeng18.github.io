@@ -41,7 +41,7 @@
 <meta property="og:image" content="http://example.com/2023/11/26/DeepLearning/image-20231126192129052.png">
 <meta property="og:image" content="http://example.com/2023/11/26/DeepLearning/image-20231126190904582.png">
 <meta property="article:published_time" content="2023-11-26T09:45:27.000Z">
-<meta property="article:modified_time" content="2023-11-26T11:33:51.458Z">
+<meta property="article:modified_time" content="2024-04-04T10:07:44.579Z">
 <meta property="article:author" content="Llfeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/11/26/DeepLearning/image-20231126191940527.png">
@@ -208,10 +208,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-11-26 17:45:27 / 修改时间：19:33:51" itemprop="dateCreated datePublished" datetime="2023-11-26T17:45:27+08:00">2023-11-26</time>
+              <time title="创建时间：2023-11-26 17:45:27" itemprop="dateCreated datePublished" datetime="2023-11-26T17:45:27+08:00">2023-11-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-04-04 18:07:44" itemprop="dateModified" datetime="2024-04-04T18:07:44+08:00">2024-04-04</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -246,14 +252,14 @@
 
       
         <h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>视频</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1FT4y1E74V?p=1&amp;vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08">https://www.bilibili.com/video/BV1FT4y1E74V?p=1&amp;vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1FT4y1E74V?p=1&vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08">https://www.bilibili.com/video/BV1FT4y1E74V?p=1&amp;vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08</a></p>
 <p>笔记</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/fengdu78/deeplearning_ai_books">https://github.com/fengdu78/deeplearning_ai_books</a></p>
 <p>相应的作业可以在github上搜索一下</p>
 <p>以下内容是对该课程的一个综述总结，以课程为维度更新</p>
 <h2 id="第一门课-神经网络和深度学习-Neural-Networks-and-Deep-Learning"><a href="#第一门课-神经网络和深度学习-Neural-Networks-and-Deep-Learning" class="headerlink" title="第一门课 神经网络和深度学习(Neural Networks and Deep Learning)"></a>第一门课 神经网络和深度学习(Neural Networks and Deep Learning)</h2><h3 id="第一周：深度学习引言-Introduction-to-Deep-Learning"><a href="#第一周：深度学习引言-Introduction-to-Deep-Learning" class="headerlink" title="第一周：深度学习引言(Introduction to Deep Learning)"></a>第一周：深度学习引言(Introduction to Deep Learning)</h3><p>神经网络是一种由x到y的映射，输入一些参数x，然后经过特定的计算得到参数y</p>
 <ul>
-<li>形如 $ y = f(x) $</li>
+<li>形如 $ y &#x3D; f(x) $</li>
 </ul>
 <p>随着数据规模、计算量增大及算法的创新，深度学习变得如此热门</p>
 <h3 id="第二周：神经网络的编程基础-Basics-of-Neural-Network-programming"><a href="#第二周：神经网络的编程基础-Basics-of-Neural-Network-programming" class="headerlink" title="第二周：神经网络的编程基础(Basics of Neural Network programming)"></a>第二周：神经网络的编程基础(Basics of Neural Network programming)</h3><p>逻辑回归是一个用于二分类(<strong>binary classification</strong>)的算法。在二分类问题中，我们的目标就是习得一个分类器，它以图片的特征向量作为输入，然后预测输出结果$y$为1还是0。</p>
@@ -261,23 +267,29 @@
 <li>例如输入一张图片，然后判断这张图片是猫还是不是猫</li>
 </ul>
 <p>向量化的逻辑回归步骤</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126191940527.png" alt="image-20231126191940527" style="zoom: 67%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126191940527.png" alt="image-20231126191940527" style="zoom: 67%;">
+
+
+
 <p>这是一个一层的神经网络，即输入直接映射到输出。以下以识别猫为例。</p>
-<p>首先输入一个X，它的维度为（nx，m），nx为每个数据的参数，例如我们输入的图片是一个64 <em> 64像素的格式，那么nx就是64 </em> 64 <em> 3 =  12288，64 </em> 64 代表有 64 * 64 个像素点，由RGB三种颜色构成，3代表rgb三种颜色，将他们放到一个数组里就是一个数据，m代表有m个这样的数据。w是函数的系数，维度为(nx, 1)，$w^{T}$ 代表w的转置，b的维度为（1,1）。</p>
-<p>Z是线性部分的输出，如果用这个值做为结果那么神经网络就只能是线性的了，那么不管多大的神经网络都可以等效成两层了，因此我们需要<strong>sigmoid</strong>函数$\sigma \left( z \right)=\frac{1}{1+e^{-z}}$，通过把z输入一个非线性的部分，范围是(0,1)。得到我们的预测值A。</p>
+<p>首先输入一个X，它的维度为（nx，m），nx为每个数据的参数，例如我们输入的图片是一个64 * 64像素的格式，那么nx就是64 * 64 * 3 &#x3D;  12288，64 * 64 代表有 64 * 64 个像素点，由RGB三种颜色构成，3代表rgb三种颜色，将他们放到一个数组里就是一个数据，m代表有m个这样的数据。w是函数的系数，维度为(nx, 1)，$w^{T}$ 代表w的转置，b的维度为（1,1）。</p>
+<p>Z是线性部分的输出，如果用这个值做为结果那么神经网络就只能是线性的了，那么不管多大的神经网络都可以等效成两层了，因此我们需要<strong>sigmoid</strong>函数$\sigma \left( z \right)&#x3D;\frac{1}{1+e^{-z}}$，通过把z输入一个非线性的部分，范围是(0,1)。得到我们的预测值A。</p>
 <p>到此正向传播部分就完成了，这时候我们认为A &gt; 0.5的部分认为它是猫，小于0.5的部分认为它不是猫，得出一个结果$\hat{y}$和训练集的预期输出Y做对比就可以得出正确率，通过代价函数</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126191016133.png" alt="image-20231126191016133" style="zoom: 50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126191016133.png" alt="image-20231126191016133" style="zoom: 50%;">
+
 <p>可以衡量预测输出值和实际值有多接近，然后我们要做的是让代价函数尽可能的小。</p>
 <p>数学上想要知道一个函数怎么样可以变小就是去求他的导数。这就进入了方向传播的过程，dZ是代价函数对Z的导数，dw是代价函数对w的偏导，db是代价函数对b的偏导。</p>
 <p>求出以上几个导数我们就可以去更新w和b了，a代表学习率，太小会导致代价函数减小地很慢，太大则会导致代价函数不收敛。</p>
 <p>这样一次逻辑回归就做完了，我们会重复以上步骤，然后观察代价函数。之后我们可以用训练得出的w和b来预测测试集合的效果。</p>
 <h3 id="第三周：浅层神经网络-Shallow-neural-networks"><a href="#第三周：浅层神经网络-Shallow-neural-networks" class="headerlink" title="第三周：浅层神经网络(Shallow neural networks)"></a>第三周：浅层神经网络(Shallow neural networks)</h3><p>激活函数</p>
 <img src="/2023/11/26/DeepLearning/image-20231126190235795.png" class title="image-20231126190235795">
-<p>sigmoid激活函数：$\sigma \left( z \right)=\frac{1}{1+e^{-z}}$ 除了输出层是一个二分类问题基本不会用它。</p>
-<p>tanh激活函数：$tanh(z) = \frac{e^{z} - e^{- z}}{e^{z} + e^{- z}}$  <strong>tanh</strong>是非常优秀的，几乎适合所有场合。</p>
-<p>ReLu激活函数：$ max( 0,z) $最常用的默认函数，如果不确定用哪个激活函数，就使用<strong>ReLu</strong>或者<strong>Leaky ReLu</strong>。<br>$a = max( 0.01z,z)$</p>
+
+<p>sigmoid激活函数：$\sigma \left( z \right)&#x3D;\frac{1}{1+e^{-z}}$ 除了输出层是一个二分类问题基本不会用它。</p>
+<p>tanh激活函数：$tanh(z) &#x3D; \frac{e^{z} - e^{- z}}{e^{z} + e^{- z}}$  <strong>tanh</strong>是非常优秀的，几乎适合所有场合。</p>
+<p>ReLu激活函数：$ max( 0,z) $最常用的默认函数，如果不确定用哪个激活函数，就使用<strong>ReLu</strong>或者<strong>Leaky ReLu</strong>。<br>$a &#x3D; max( 0.01z,z)$</p>
 <p>两层的神经网络（不将输入层看作一个标准的层）</p>
 <img src="/2023/11/26/DeepLearning/image-20231126190244457.png" class title="image-20231126190244457">
+
 <ul>
 <li>神经网络的<strong>输入层</strong> : 输入特征$x_1$、$x_2$、$x_3$，它们被竖直地堆叠起来。</li>
 <li><strong>隐藏层</strong> : （四个结点）。但是隐藏层中的东西，在训练集中你是无法看到的。</li>
@@ -285,33 +297,50 @@
 </ul>
 <p>与前面讲到的逻辑回归类似，两层神经网络只是把前一层的输出当做下一层的输入，使用符号$^{[m]}$表示第$m$层网络中节点相关的数，这些节点的集合被称为第$m$层网络。</p>
 <p>正向传播方程如下：</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192005605.png" alt="image-20231126192005605" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192005605.png" alt="image-20231126192005605" style="zoom:50%;">
+
+
+
 <p>反向传播方程如下:</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192027132.png" alt="image-20231126192027132" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192027132.png" alt="image-20231126192027132" style="zoom:50%;">
+
+
+
 <p>梯度下降</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192044269.png" alt="image-20231126192044269" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192044269.png" alt="image-20231126192044269" style="zoom:50%;">
+
+
+
 <ul>
 <li>这里<code>np.sum</code>是python的numpy命令，<code>axis=1</code>表示水平相加求和，<code>keepdims</code>是防止<strong>python</strong>输出那些古怪的秩数$(n,)$，加上这个确保阵矩阵$db^{[2]}$这个向量输出的维度为$(n,1)$这样标准的形式。 </li>
 <li>第一步w和b初始化时候应该使用随机值，避免全部赋值为0导致神经网络的每个节点都是一样的权重</li>
 </ul>
 <p>直观理解反向传播</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126190850849.png" alt="image-20231126190850849" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126190850849.png" alt="image-20231126190850849" style="zoom:50%;">
+
 <p>回想当时我们讨论逻辑回归的时候，我们有这个正向传播步骤，其中我们计算$z$，然后$a$，然后损失函数$L$。</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126190856224.png" alt="image-20231126190856224" style="zoom:67%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126190856224.png" alt="image-20231126190856224" style="zoom:67%;">
+
 <p>神经网络的计算中，与逻辑回归十分类似，但中间会有多层的计算。下图是一个双层神经网络，有一个输入层，一个隐藏层和一个输出层。</p>
 <h3 id="第四周：深层神经网络-Deep-Neural-Networks"><a href="#第四周：深层神经网络-Deep-Neural-Networks" class="headerlink" title="第四周：深层神经网络(Deep Neural Networks)"></a>第四周：深层神经网络(Deep Neural Networks)</h3><p>在过去的几年中，<strong>DLI</strong>（深度学习学院 <strong>deep learning institute</strong>）已经意识到有一些函数，只有非常深的神经网络能学会，而更浅的模型则办不到。<strong>尽管对于任何给定的问题很难去提前预测到底需要多深的神经网络，所以先去尝试逻辑回归，尝试一层然后两层隐含层，然后把隐含层的数量看做是另一个可以自由选择大小的超参数，然后再保留交叉验证数据上评估，或者用你的开发集来评估</strong>。</p>
 <p>深层神经网络主要的概念是，从入参会从比较小的细节入手，比如边缘，然后再一步步到更大更复杂的区域</p>
 <p>前向传播：输入${a}^{[l-1]}$，输出是${a}^{[l]}$，缓存为${z}^{[l]}$；从实现的角度来说我们可以缓存下${w}^{[l]}$和${b}^{[l]}$，这样更容易在不同的环节中调用函数。</p>
 <p>前向传播的步骤：  </p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192104207.png" alt="image-20231126192104207" style="zoom: 50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192104207.png" alt="image-20231126192104207" style="zoom: 50%;">
+
 <p>向量化实现过程：</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192116630.png" alt="image-20231126192116630" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192116630.png" alt="image-20231126192116630" style="zoom:50%;">
+
+
+
 <p>反向传播：输入为${da}^{[l]}$，输出为${da}^{[l-1]}$，${dw}^{[l]}$, ${db}^{[l]}$</p>
 <p>反向传播的步骤：</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126192129052.png" alt="image-20231126192129052" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126192129052.png" alt="image-20231126192129052" style="zoom:50%;">
+
 <p>式子（5）由式子（4）带入式子（1）得到，前四个式子就可实现反向函数。</p>
 <p>向量化实现过程：</p>
-<p><img src="/2023/11/26/DeepLearning/image-20231126190904582.png" alt="image-20231126190904582" style="zoom:50%;"></p>
+<img src="/2023/11/26/DeepLearning/image-20231126190904582.png" alt="image-20231126190904582" style="zoom:50%;">
+
 <p>$w$的维度是（本层的维数，前一层的维数），即 ${w}^{[l]}$: (${n}^{[l]}$,${n}^{[l-1]}$)；</p>
 <p>$b$的维度是（本层的维数，1），即: ${b}^{[l]}$ : (${n}^{[l]},1)$；</p>
 <p>超参数实际上控制了最后的参数$W$和$b$的值，比如算法中的<strong>learning rate</strong> $a$（学习率）、<strong>iterations</strong>(梯度下降法循环的数量)、$L$（隐藏层数目）、${n}^{[l]}$（隐藏层单元数目）、<strong>choice of activation function</strong>（激活函数的选择）。</p>
@@ -347,6 +376,13 @@
 
 
         
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2024/04/04/Parameter-count/" rel="next" title="Parameter count">
+      Parameter count <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
   </article>
@@ -426,7 +462,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -460,7 +496,7 @@
 <div class="copyright">
   
   &copy; 2023-10 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -469,12 +505,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">3k</span>
+    <span title="站点总字数">14k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3 分钟</span>
+    <span title="站点阅读时长">13 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.0.0
   </div>

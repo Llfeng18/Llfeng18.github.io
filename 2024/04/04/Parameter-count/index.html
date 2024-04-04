@@ -20,29 +20,38 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Llfeng">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="分词和上下文长度分词是文本和token相互转化的过程，词汇表越大，文本映射到token的损失越少，能保留的信息越多，但同时会带来模型参数量和计算量的提升，因此词汇表大小会存在一个取舍，下文会计算对应的增量 上下文长度指的是模型最大能关注到的文本长度，上下文长度越大模型能同时关注更多的信息，当前私有模型要么通过使用私有数据微调，要么通过增加上下文长度把所有数据一次性给模型。 中文分词中文分词流程：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Parameter count">
+<meta property="og:url" content="http://example.com/2024/04/04/Parameter-count/index.html">
 <meta property="og:site_name" content="Llfeng">
-<meta property="og:description" content="Welcome">
+<meta property="og:description" content="分词和上下文长度分词是文本和token相互转化的过程，词汇表越大，文本映射到token的损失越少，能保留的信息越多，但同时会带来模型参数量和计算量的提升，因此词汇表大小会存在一个取舍，下文会计算对应的增量 上下文长度指的是模型最大能关注到的文本长度，上下文长度越大模型能同时关注更多的信息，当前私有模型要么通过使用私有数据微调，要么通过增加上下文长度把所有数据一次性给模型。 中文分词中文分词流程：">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/image-20240125111241738.png">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/image-20240307171018254.png">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/v2-7276937c93e0ab2cbb74ad33f3c83a8e_1440w.webp">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/image-20240310093550323.png">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/image-20240125113050750.png">
+<meta property="og:image" content="http://example.com/2024/04/04/Parameter-count/MBXY-CR-deab4f3ddb8e4e128bec48d43632f5e7.png">
+<meta property="article:published_time" content="2024-04-04T10:06:56.000Z">
+<meta property="article:modified_time" content="2024-04-04T10:17:33.382Z">
 <meta property="article:author" content="Llfeng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/04/04/Parameter-count/image-20240125111241738.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2024/04/04/Parameter-count/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false
+    isHome : false,
+    isPost : true
   };
 </script>
 
-  <title>Llfeng</title>
+  <title>Parameter count | Llfeng</title>
   
 
 
@@ -166,10 +175,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/04/Parameter-count/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -183,8 +192,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/04/04/Parameter-count/" class="post-title-link" itemprop="url">Parameter count</a>
+          Parameter count
         </h1>
 
         <div class="post-meta">
@@ -198,7 +206,14 @@
               <time title="创建时间：2024-04-04 18:06:56 / 修改时间：18:17:33" itemprop="dateCreated datePublished" datetime="2024-04-04T18:06:56+08:00">2024-04-04</time>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -223,7 +238,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="分词和上下文长度"><a href="#分词和上下文长度" class="headerlink" title="分词和上下文长度"></a>分词和上下文长度</h2><p>分词是文本和token相互转化的过程，词汇表越大，文本映射到token的损失越少，能保留的信息越多，但同时会带来模型参数量和计算量的提升，因此词汇表大小会存在一个取舍，下文会计算对应的增量</p>
+        <h2 id="分词和上下文长度"><a href="#分词和上下文长度" class="headerlink" title="分词和上下文长度"></a>分词和上下文长度</h2><p>分词是文本和token相互转化的过程，词汇表越大，文本映射到token的损失越少，能保留的信息越多，但同时会带来模型参数量和计算量的提升，因此词汇表大小会存在一个取舍，下文会计算对应的增量</p>
 <p>上下文长度指的是模型最大能关注到的文本长度，上下文长度越大模型能同时关注更多的信息，当前私有模型要么通过使用私有数据微调，要么通过增加上下文长度把所有数据一次性给模型。</p>
 <h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3><p>中文分词流程：</p>
 <ol>
@@ -1047,188 +1062,44 @@ MODEL_TO_ENCODING: dict[str, str] = &#123;
 <li>本文未估计显卡互联的最大张数，能组合成的集群，后续看一下怎么计算</li>
 </ul>
 
-      
     </div>
 
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Llfeng
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2024/04/04/Parameter-count/" title="Parameter count">http://example.com/2024/04/04/Parameter-count/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/26/DeepLearning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/img.png">
-      <meta itemprop="name" content="Llfeng">
-      <meta itemprop="description" content="Welcome">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Llfeng">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/11/26/DeepLearning/" class="post-title-link" itemprop="url">DeepLearning</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-11-26 17:45:27" itemprop="dateCreated datePublished" datetime="2023-11-26T17:45:27+08:00">2023-11-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-04-04 18:07:44" itemprop="dateModified" datetime="2024-04-04T18:07:44+08:00">2024-04-04</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>视频</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1FT4y1E74V?p=1&vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08">https://www.bilibili.com/video/BV1FT4y1E74V?p=1&amp;vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08</a></p>
-<p>笔记</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/fengdu78/deeplearning_ai_books">https://github.com/fengdu78/deeplearning_ai_books</a></p>
-<p>相应的作业可以在github上搜索一下</p>
-<p>以下内容是对该课程的一个综述总结，以课程为维度更新</p>
-<h2 id="第一门课-神经网络和深度学习-Neural-Networks-and-Deep-Learning"><a href="#第一门课-神经网络和深度学习-Neural-Networks-and-Deep-Learning" class="headerlink" title="第一门课 神经网络和深度学习(Neural Networks and Deep Learning)"></a>第一门课 神经网络和深度学习(Neural Networks and Deep Learning)</h2><h3 id="第一周：深度学习引言-Introduction-to-Deep-Learning"><a href="#第一周：深度学习引言-Introduction-to-Deep-Learning" class="headerlink" title="第一周：深度学习引言(Introduction to Deep Learning)"></a>第一周：深度学习引言(Introduction to Deep Learning)</h3><p>神经网络是一种由x到y的映射，输入一些参数x，然后经过特定的计算得到参数y</p>
-<ul>
-<li>形如 $ y &#x3D; f(x) $</li>
-</ul>
-<p>随着数据规模、计算量增大及算法的创新，深度学习变得如此热门</p>
-<h3 id="第二周：神经网络的编程基础-Basics-of-Neural-Network-programming"><a href="#第二周：神经网络的编程基础-Basics-of-Neural-Network-programming" class="headerlink" title="第二周：神经网络的编程基础(Basics of Neural Network programming)"></a>第二周：神经网络的编程基础(Basics of Neural Network programming)</h3><p>逻辑回归是一个用于二分类(<strong>binary classification</strong>)的算法。在二分类问题中，我们的目标就是习得一个分类器，它以图片的特征向量作为输入，然后预测输出结果$y$为1还是0。</p>
-<ul>
-<li>例如输入一张图片，然后判断这张图片是猫还是不是猫</li>
-</ul>
-<p>向量化的逻辑回归步骤</p>
-<img src="/2023/11/26/DeepLearning/image-20231126191940527.png" alt="image-20231126191940527" style="zoom: 67%;">
 
 
-
-<p>这是一个一层的神经网络，即输入直接映射到输出。以下以识别猫为例。</p>
-<p>首先输入一个X，它的维度为（nx，m），nx为每个数据的参数，例如我们输入的图片是一个64 * 64像素的格式，那么nx就是64 * 64 * 3 &#x3D;  12288，64 * 64 代表有 64 * 64 个像素点，由RGB三种颜色构成，3代表rgb三种颜色，将他们放到一个数组里就是一个数据，m代表有m个这样的数据。w是函数的系数，维度为(nx, 1)，$w^{T}$ 代表w的转置，b的维度为（1,1）。</p>
-<p>Z是线性部分的输出，如果用这个值做为结果那么神经网络就只能是线性的了，那么不管多大的神经网络都可以等效成两层了，因此我们需要<strong>sigmoid</strong>函数$\sigma \left( z \right)&#x3D;\frac{1}{1+e^{-z}}$，通过把z输入一个非线性的部分，范围是(0,1)。得到我们的预测值A。</p>
-<p>到此正向传播部分就完成了，这时候我们认为A &gt; 0.5的部分认为它是猫，小于0.5的部分认为它不是猫，得出一个结果$\hat{y}$和训练集的预期输出Y做对比就可以得出正确率，通过代价函数</p>
-<img src="/2023/11/26/DeepLearning/image-20231126191016133.png" alt="image-20231126191016133" style="zoom: 50%;">
-
-<p>可以衡量预测输出值和实际值有多接近，然后我们要做的是让代价函数尽可能的小。</p>
-<p>数学上想要知道一个函数怎么样可以变小就是去求他的导数。这就进入了方向传播的过程，dZ是代价函数对Z的导数，dw是代价函数对w的偏导，db是代价函数对b的偏导。</p>
-<p>求出以上几个导数我们就可以去更新w和b了，a代表学习率，太小会导致代价函数减小地很慢，太大则会导致代价函数不收敛。</p>
-<p>这样一次逻辑回归就做完了，我们会重复以上步骤，然后观察代价函数。之后我们可以用训练得出的w和b来预测测试集合的效果。</p>
-<h3 id="第三周：浅层神经网络-Shallow-neural-networks"><a href="#第三周：浅层神经网络-Shallow-neural-networks" class="headerlink" title="第三周：浅层神经网络(Shallow neural networks)"></a>第三周：浅层神经网络(Shallow neural networks)</h3><p>激活函数</p>
-<img src="/2023/11/26/DeepLearning/image-20231126190235795.png" class title="image-20231126190235795">
-
-<p>sigmoid激活函数：$\sigma \left( z \right)&#x3D;\frac{1}{1+e^{-z}}$ 除了输出层是一个二分类问题基本不会用它。</p>
-<p>tanh激活函数：$tanh(z) &#x3D; \frac{e^{z} - e^{- z}}{e^{z} + e^{- z}}$  <strong>tanh</strong>是非常优秀的，几乎适合所有场合。</p>
-<p>ReLu激活函数：$ max( 0,z) $最常用的默认函数，如果不确定用哪个激活函数，就使用<strong>ReLu</strong>或者<strong>Leaky ReLu</strong>。<br>$a &#x3D; max( 0.01z,z)$</p>
-<p>两层的神经网络（不将输入层看作一个标准的层）</p>
-<img src="/2023/11/26/DeepLearning/image-20231126190244457.png" class title="image-20231126190244457">
-
-<ul>
-<li>神经网络的<strong>输入层</strong> : 输入特征$x_1$、$x_2$、$x_3$，它们被竖直地堆叠起来。</li>
-<li><strong>隐藏层</strong> : （四个结点）。但是隐藏层中的东西，在训练集中你是无法看到的。</li>
-<li><strong>输出层</strong> : 最后一层的一个结点，它负责产生预测值。</li>
-</ul>
-<p>与前面讲到的逻辑回归类似，两层神经网络只是把前一层的输出当做下一层的输入，使用符号$^{[m]}$表示第$m$层网络中节点相关的数，这些节点的集合被称为第$m$层网络。</p>
-<p>正向传播方程如下：</p>
-<img src="/2023/11/26/DeepLearning/image-20231126192005605.png" alt="image-20231126192005605" style="zoom:50%;">
-
-
-
-<p>反向传播方程如下:</p>
-<img src="/2023/11/26/DeepLearning/image-20231126192027132.png" alt="image-20231126192027132" style="zoom:50%;">
-
-
-
-<p>梯度下降</p>
-<img src="/2023/11/26/DeepLearning/image-20231126192044269.png" alt="image-20231126192044269" style="zoom:50%;">
-
-
-
-<ul>
-<li>这里<code>np.sum</code>是python的numpy命令，<code>axis=1</code>表示水平相加求和，<code>keepdims</code>是防止<strong>python</strong>输出那些古怪的秩数$(n,)$，加上这个确保阵矩阵$db^{[2]}$这个向量输出的维度为$(n,1)$这样标准的形式。 </li>
-<li>第一步w和b初始化时候应该使用随机值，避免全部赋值为0导致神经网络的每个节点都是一样的权重</li>
-</ul>
-<p>直观理解反向传播</p>
-<img src="/2023/11/26/DeepLearning/image-20231126190850849.png" alt="image-20231126190850849" style="zoom:50%;">
-
-<p>回想当时我们讨论逻辑回归的时候，我们有这个正向传播步骤，其中我们计算$z$，然后$a$，然后损失函数$L$。</p>
-<img src="/2023/11/26/DeepLearning/image-20231126190856224.png" alt="image-20231126190856224" style="zoom:67%;">
-
-<p>神经网络的计算中，与逻辑回归十分类似，但中间会有多层的计算。下图是一个双层神经网络，有一个输入层，一个隐藏层和一个输出层。</p>
-<h3 id="第四周：深层神经网络-Deep-Neural-Networks"><a href="#第四周：深层神经网络-Deep-Neural-Networks" class="headerlink" title="第四周：深层神经网络(Deep Neural Networks)"></a>第四周：深层神经网络(Deep Neural Networks)</h3><p>在过去的几年中，<strong>DLI</strong>（深度学习学院 <strong>deep learning institute</strong>）已经意识到有一些函数，只有非常深的神经网络能学会，而更浅的模型则办不到。<strong>尽管对于任何给定的问题很难去提前预测到底需要多深的神经网络，所以先去尝试逻辑回归，尝试一层然后两层隐含层，然后把隐含层的数量看做是另一个可以自由选择大小的超参数，然后再保留交叉验证数据上评估，或者用你的开发集来评估</strong>。</p>
-<p>深层神经网络主要的概念是，从入参会从比较小的细节入手，比如边缘，然后再一步步到更大更复杂的区域</p>
-<p>前向传播：输入${a}^{[l-1]}$，输出是${a}^{[l]}$，缓存为${z}^{[l]}$；从实现的角度来说我们可以缓存下${w}^{[l]}$和${b}^{[l]}$，这样更容易在不同的环节中调用函数。</p>
-<p>前向传播的步骤：  </p>
-<img src="/2023/11/26/DeepLearning/image-20231126192104207.png" alt="image-20231126192104207" style="zoom: 50%;">
-
-<p>向量化实现过程：</p>
-<img src="/2023/11/26/DeepLearning/image-20231126192116630.png" alt="image-20231126192116630" style="zoom:50%;">
-
-
-
-<p>反向传播：输入为${da}^{[l]}$，输出为${da}^{[l-1]}$，${dw}^{[l]}$, ${db}^{[l]}$</p>
-<p>反向传播的步骤：</p>
-<img src="/2023/11/26/DeepLearning/image-20231126192129052.png" alt="image-20231126192129052" style="zoom:50%;">
-
-<p>式子（5）由式子（4）带入式子（1）得到，前四个式子就可实现反向函数。</p>
-<p>向量化实现过程：</p>
-<img src="/2023/11/26/DeepLearning/image-20231126190904582.png" alt="image-20231126190904582" style="zoom:50%;">
-
-<p>$w$的维度是（本层的维数，前一层的维数），即 ${w}^{[l]}$: (${n}^{[l]}$,${n}^{[l-1]}$)；</p>
-<p>$b$的维度是（本层的维数，1），即: ${b}^{[l]}$ : (${n}^{[l]},1)$；</p>
-<p>超参数实际上控制了最后的参数$W$和$b$的值，比如算法中的<strong>learning rate</strong> $a$（学习率）、<strong>iterations</strong>(梯度下降法循环的数量)、$L$（隐藏层数目）、${n}^{[l]}$（隐藏层单元数目）、<strong>choice of activation function</strong>（激活函数的选择）。</p>
-<p>如何寻找超参数的最优值？走<strong>Idea—Code—Experiment—Idea</strong>这个循环，尝试各种不同的参数，实现模型并观察是否成功（损失函数值是否更小），然后再迭代。</p>
-<p>有一条经验规律：经常试试不同的超参数，勤于检查结果，看看有没有更好的超参数取值，你将会得到设定超参数的直觉。</p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/26/DeepLearning/" rel="prev" title="DeepLearning">
+      <i class="fa fa-chevron-left"></i> DeepLearning
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
@@ -1236,12 +1107,14 @@ MODEL_TO_ENCODING: dict[str, str] = &#123;
 
   </div>
 
-  
-
-
 
           </div>
           
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81OTEwMi8zNTU2NA=="></div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1288,6 +1161,7 @@ MODEL_TO_ENCODING: dict[str, str] = &#123;
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E8%AF%8D%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">分词和上下文长度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D"><span class="nav-number">1.1.</span> <span class="nav-text">中文分词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%A8%A1%E5%9E%8B%E8%AF%8D%E8%A1%A8%E5%A4%A7%E5%B0%8F"><span class="nav-number">1.2.</span> <span class="nav-text">常见模型词表大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E9%A2%84%E4%BC%B0"><span class="nav-number">1.3.</span> <span class="nav-text">数据集预估</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E8%AF%8D%E6%B5%8B%E8%AF%95"><span class="nav-number">1.3.1.</span> <span class="nav-text">分词测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%92%8C%E8%AE%A1%E7%AE%97%E9%87%8F%E5%A2%9E%E9%87%8F"><span class="nav-number">1.4.</span> <span class="nav-text">内存和计算量增量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="nav-number">1.4.1.</span> <span class="nav-text">示例计算公式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">模型参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E9%87%8F"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">参数量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%87%8F"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">计算量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E5%88%86%E8%AF%8D%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E5%A2%9E%E9%87%8F%E8%AE%A1%E7%AE%97"><span class="nav-number">1.4.2.</span> <span class="nav-text">不同模型分词和上下文长度增量计算</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E5%8F%82%E6%95%B0%E8%AE%AD%E7%BB%83"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">混合参数训练</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">模型参数量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GPT%E7%B3%BB%E5%88%97"><span class="nav-number">2.1.</span> <span class="nav-text">GPT系列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GPT-2"><span class="nav-number">2.1.1.</span> <span class="nav-text">GPT-2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GPT-3"><span class="nav-number">2.1.2.</span> <span class="nav-text">GPT-3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GPT-3-5%E5%92%8CGPT-4"><span class="nav-number">2.1.3.</span> <span class="nav-text">GPT-3.5和GPT-4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LLaMA"><span class="nav-number">2.2.</span> <span class="nav-text">LLaMA</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LLaMA-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">LLaMA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LLaMA-2"><span class="nav-number">2.2.2.</span> <span class="nav-text">LLaMA 2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E5%8A%9B%E9%9C%80%E6%B1%82"><span class="nav-number">3.</span> <span class="nav-text">算力需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">模型训练量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E7%90%86%E6%88%90%E6%9C%AC"><span class="nav-number">3.2.</span> <span class="nav-text">推理成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">显存占用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">4.1.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%8D%A0%E7%94%A8%E6%98%BE%E5%AD%98"><span class="nav-number">4.1.1.</span> <span class="nav-text">参数占用显存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E5%80%BC"><span class="nav-number">4.1.2.</span> <span class="nav-text">激活值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">推理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#KV-cache"><span class="nav-number">4.2.1.</span> <span class="nav-text">KV cache</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%8D%A1"><span class="nav-number">5.</span> <span class="nav-text">显卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api"><span class="nav-number">6.</span> <span class="nav-text">api</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo"><span class="nav-number">7.</span> <span class="nav-text">todo</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -1459,62 +1333,24 @@ $(document).ready(function() {
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
 </body>
 </html>
