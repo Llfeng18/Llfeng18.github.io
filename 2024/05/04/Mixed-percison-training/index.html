@@ -20,29 +20,35 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Llfeng">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="前言任何程序(包括神经网络训练和推理)的性能都受到以下三个因素之一的限制:算术带宽、内存带宽或延迟。混合精度训练可以降低前两个。 神经网络的训练推理过程中都是使用浮点数进行计算的，因此先介绍浮点数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mixed percison training">
+<meta property="og:url" content="http://example.com/2024/05/04/Mixed-percison-training/index.html">
 <meta property="og:site_name" content="Llfeng">
-<meta property="og:description" content="Welcome">
+<meta property="og:description" content="前言任何程序(包括神经网络训练和推理)的性能都受到以下三个因素之一的限制:算术带宽、内存带宽或延迟。混合精度训练可以降低前两个。 神经网络的训练推理过程中都是使用浮点数进行计算的，因此先介绍浮点数。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/05/04/Mixed-percison-training/image-20240504181042393.png">
+<meta property="og:image" content="http://example.com/2024/05/04/Mixed-percison-training/image-20240504190751259.png">
+<meta property="article:published_time" content="2024-05-04T11:06:56.000Z">
+<meta property="article:modified_time" content="2024-05-04T12:21:59.744Z">
 <meta property="article:author" content="Llfeng">
+<meta property="article:tag" content="Train">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/05/04/Mixed-percison-training/image-20240504181042393.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2024/05/04/Mixed-percison-training/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false
+    isHome : false,
+    isPost : true
   };
 </script>
 
-  <title>Llfeng</title>
+  <title>Mixed percison training | Llfeng</title>
   
 
 
@@ -166,10 +172,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/04/Mixed-percison-training/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -183,8 +189,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/05/04/Mixed-percison-training/" class="post-title-link" itemprop="url">Mixed percison training</a>
+          Mixed percison training
         </h1>
 
         <div class="post-meta">
@@ -207,7 +212,14 @@
                 </span>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -232,221 +244,193 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>任何程序(包括神经网络训练和推理)的性能都受到以下三个因素之一的限制:算术带宽、内存带宽或延迟。混合精度训练可以降低前两个。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>任何程序(包括神经网络训练和推理)的性能都受到以下三个因素之一的限制:算术带宽、内存带宽或延迟。混合精度训练可以降低前两个。</p>
 <p>神经网络的训练推理过程中都是使用浮点数进行计算的，因此先介绍浮点数。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/05/04/Mixed-percison-training/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+<span id="more"></span>
+
+
+
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><p>浮点数在计算机硬件中是以基数为 2 (二进制) 的小数来表示的。大多数的十进制小数都不能精确地表示为二进制小数。</p>
+<ul>
+<li>0.101 &#x3D; 1&#x2F;2 + 0&#x2F;4 + 1&#x2F;8</li>
+<li>无论使用多少位以 2 为基数的数码，十进制的 0.1 都无法精确地表示为一个以 2 为基数的小数。 在以 2 为基数的情况下， 1&#x2F;10 是一个无限循环小数。0.0001100110011001100110011001100110011001100110011…</li>
+</ul>
+<h3 id="浮点数表示方法"><a href="#浮点数表示方法" class="headerlink" title="浮点数表示方法"></a>浮点数表示方法</h3><img src="/2024/05/04/Mixed-percison-training/image-20240504181042393.png" alt="image-20240504181042393" style="zoom:50%;">
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>符号位</th>
+<th>指数exponent</th>
+<th>小数fraction</th>
+<th>计算方式</th>
+<th>最小精度</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FP8(E5M2)</td>
+<td>1</td>
+<td>5</td>
+<td>2</td>
+<td></td>
+<td>$2^{-17} $</td>
+<td></td>
+</tr>
+<tr>
+<td>FP8(E4M3)</td>
+<td>1</td>
+<td>4</td>
+<td>3</td>
+<td></td>
+<td>$2^{-10} $</td>
+<td></td>
+</tr>
+<tr>
+<td>BP16</td>
+<td>1</td>
+<td>8</td>
+<td>7</td>
+<td></td>
+<td>$2^{-134} $</td>
+<td></td>
+</tr>
+<tr>
+<td>float 16</td>
+<td>1</td>
+<td>5</td>
+<td>10</td>
+<td>$(-1)^{sign} \times 2^{exponent-15} \times (1 + \frac {fraction}{2^{10}}) $</td>
+<td>$2^{-24} $</td>
+<td>$\pm65504$</td>
+</tr>
+<tr>
+<td>float 32</td>
+<td>1</td>
+<td>8</td>
+<td>23</td>
+<td>$(-1)^{sign} \times 2^{exponent-127} \times (1 + \frac {fraction}{2^{23}}) $</td>
+<td>$2^{-149} $</td>
+<td>$\pm3.402e^{38}$</td>
+</tr>
+<tr>
+<td>float 64</td>
+<td>1</td>
+<td>11</td>
+<td>52</td>
+<td></td>
+<td>$2^{-1075} $</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>exponent全0时</p>
+<ul>
+<li>float 16：$(-1)^{sign} \times 2^{-14} \times \frac {fraction}{2^{10}} $​</li>
+<li>float 32：$(-1)^{sign} \times 2^{-126} \times \frac {fraction}{2^{23}} $​</li>
+</ul>
+</li>
+<li><p>exponent全1</p>
+<ul>
+<li>如果fraction全0 ， 则表示+inf 或者− inf </li>
+<li>如果fraction不全为0 ， 则表示NaN</li>
+</ul>
+</li>
+<li><p>这里取值范围只展示最大值（指数exponent除末位全1，小数fraction全1），float 可以表示 $\pm0$</p>
+</li>
+<li><p>表示的数的范围是非均匀的， 在不同的区间， 精度是不一样的。最好精度是exponent全0 fraction为1时。离0越远，精度越差，指数位每增大1，精度有效位数就少一位。</p>
+<ul>
+<li>fp32格式下，当指数为149时候，2^23^ &#x3D; 8388608，间隔达到1，小数都会舍入到整数<ul>
+<li>当指数为150时候，2^24^ &#x3D; 16777216，间隔变为2，已经不能精确存储整数了。</li>
+</ul>
+</li>
+<li>还有一种说法是精度即底数有效数字的位数，fp32底数有23位，那么可以表示2^23^≈10^6.92^种有效数字，即所有二进制下形如1.xxxxx的23位数大致可以和十进制下的7位小数一一对应，7位以后不同的数字只能对应到同一个二进制数上。随着整数部分越来越大，小数部分的位数会越来越短</li>
+</ul>
+</li>
+<li><p>1≤小数fraction&lt;2，也可以写成1.xxxxx的形式。计算机内部保存时，默认这个数第一位总是1，所以舍去。只保存后面的xxxxx部分，节省一位有效数字，计算的时候要补上</p>
+</li>
+</ul>
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://www.h-schmidt.net/FloatConverter/IEEE754.html">计算器</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/leo0308/article/details/117398166">https://blog.csdn.net/leo0308/article/details/117398166</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/tutorial/floatingpoint.html">https://docs.python.org/zh-cn/3/tutorial/floatingpoint.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ofnoname/p/15839927.html">https://www.cnblogs.com/ofnoname/p/15839927.html</a></p>
+<h2 id="混合精度训练"><a href="#混合精度训练" class="headerlink" title="混合精度训练"></a>混合精度训练</h2><ol>
+<li>在 FP32 中维护权重的主副本</li>
+</ol>
+<img src="/2024/05/04/Mixed-percison-training/image-20240504190751259.png" alt="image-20240504190751259" style="zoom: 50%;">
+
+<ul>
+<li>通过copy一个 FP32类型的权重副本，在训练过程中使用F16，更新权重时使用FP32。若更新权重时使用FP16，weight * learning_rate是一个极小的数字<ul>
+<li>浮点数存在数值下溢的问题，FP16最小精度为 $2^{-24} $ ，到训练后期若weight * learning_rate &lt;$2^{-24} $会出现无法更新权重的现象</li>
+<li>FP16的小数位数为10位，若权重为weight * learning_rate的$2^{11} $倍时，同样无法更新</li>
+</ul>
+</li>
+</ul>
+<p>尽管与单精度训练相比，维护额外的权重副本会使权重的内存需求增加 50%，但对整体内存使用的影响要小得多。对于训练，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/624740065">内存消耗主要由激活主导</a>，因为较大的批处理大小和每层的激活被保存以在反向传播阶段重复使用。由于激活也以半精度格式存储，因此训练深度神经网络的总内存消耗大约减半</p>
+<ol start="2">
+<li>损失缩放</li>
+</ol>
+<p>FP16 可表示范围的大部分未使用，而许多值低于最小可表示范围并变为零。按比例放大梯度将移动梯度以占据更多的可表示范围，并保留否则会丢失为零的值。</p>
+<ul>
+<li>在开始反向传播之前缩放在前向传递中计算的损失值。</li>
+<li>通过链式法则，反向传播可确保所有梯度值按相同的量缩放。这在反向传播期间不需要额外的操作，并防止相关梯度值变为零。</li>
+<li>在权重更新之前，必须取消调整权重梯度，以保持 FP32 训练中的更新幅度</li>
+</ul>
+<p>只要不溢出（上溢和下溢）可以任意选择缩放因子，一种选择是在检测到溢出时跳过权重更新，只需继续进行下一次迭代即可。</p>
+<ol start="3">
+<li>提高算数精度</li>
+</ol>
+<p>fp16矩阵乘法的过程中，需要利用 fp32 来进行矩阵乘法中间的累加(accumulated)，然后再将 fp32 的值转化为 fp16 进行存储。 换句不太严谨的话来说，也就是利用 <strong>利用fp16进行乘法和存储，利用fp32来进行加法计算</strong>。 这么做的原因主要是为了减少加法过程中的舍入误差，保证精度不损失。</p>
+<p>参考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1710.03740">https://arxiv.org/pdf/1710.03740</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103685761">https://zhuanlan.zhihu.com/p/103685761</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/441591808">https://zhuanlan.zhihu.com/p/441591808</a></li>
+</ul>
+
     </div>
 
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Llfeng
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2024/05/04/Mixed-percison-training/" title="Mixed percison training">http://example.com/2024/05/04/Mixed-percison-training/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Train/" rel="tag"># Train</a>
+          </div>
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/04/Parameter-count/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/img.png">
-      <meta itemprop="name" content="Llfeng">
-      <meta itemprop="description" content="Welcome">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Llfeng">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/04/04/Parameter-count/" class="post-title-link" itemprop="url">Parameter count</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-04-04 18:06:56" itemprop="dateCreated datePublished" datetime="2024-04-04T18:06:56+08:00">2024-04-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-04 20:23:36" itemprop="dateModified" datetime="2024-05-04T20:23:36+08:00">2024-05-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>11k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="分词和上下文长度"><a href="#分词和上下文长度" class="headerlink" title="分词和上下文长度"></a>分词和上下文长度</h2><p>分词是文本和token相互转化的过程，词汇表越大，文本映射到token的损失越少，能保留的信息越多，但同时会带来模型参数量和计算量的提升，因此词汇表大小会存在一个取舍，下文会计算对应的增量</p>
-<p>上下文长度指的是模型最大能关注到的文本长度，上下文长度越大模型能同时关注更多的信息，当前私有模型要么通过使用私有数据微调，要么通过增加上下文长度把所有数据一次性给模型。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/04/04/Parameter-count/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/04/04/Parameter-count/" rel="prev" title="Parameter count">
+      <i class="fa fa-chevron-left"></i> Parameter count
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/26/DeepLearning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/img.png">
-      <meta itemprop="name" content="Llfeng">
-      <meta itemprop="description" content="Welcome">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Llfeng">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/11/26/DeepLearning/" class="post-title-link" itemprop="url">DeepLearning</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-11-26 17:45:27" itemprop="dateCreated datePublished" datetime="2023-11-26T17:45:27+08:00">2023-11-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-04 20:24:04" itemprop="dateModified" datetime="2024-05-04T20:24:04+08:00">2024-05-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>视频</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1FT4y1E74V?p=1&vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08">https://www.bilibili.com/video/BV1FT4y1E74V?p=1&amp;vd_source=bbacd2645e4ab14bd3e0a2dfb56a7a08</a></p>
-<p>笔记</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/fengdu78/deeplearning_ai_books">https://github.com/fengdu78/deeplearning_ai_books</a></p>
-<p>相应的作业可以在github上搜索一下</p>
-<p>以下内容是对DeepLearning课程的一个综述总结，以课程为维度更新</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/11/26/DeepLearning/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
   </article>
   
   
@@ -454,12 +438,14 @@
 
   </div>
 
-  
-
-
 
           </div>
           
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81OTEwMi8zNTU2NA=="></div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -506,6 +492,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">浮点数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">浮点数表示方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83"><span class="nav-number">3.</span> <span class="nav-text">混合精度训练</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -689,62 +676,24 @@ $(document).ready(function() {
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
 </body>
 </html>

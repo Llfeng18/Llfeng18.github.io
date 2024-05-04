@@ -2,18 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://example.com/2024/04/04/Parameter-count/</loc>
+    <loc>http://example.com/2023/11/26/DeepLearning/</loc>
     
-    <lastmod>2024-04-04</lastmod>
+    <lastmod>2024-05-04</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://example.com/2023/11/26/DeepLearning/</loc>
+    <loc>http://example.com/2024/04/04/Parameter-count/</loc>
     
-    <lastmod>2024-04-04</lastmod>
+    <lastmod>2024-05-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2024/05/04/Mixed-percison-training/</loc>
+    
+    <lastmod>2024-05-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/index.html</loc>
+    
+    <lastmod>2024-05-04</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -46,24 +64,43 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>http://example.com/categories/index.html</loc>
-    
-    <lastmod>2023-10-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2024-04-04</lastmod>
+    <lastmod>2024-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
+  <url>
+    <loc>http://example.com/tags/DeepLearning/</loc>
+    <lastmod>2024-05-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/Train/</loc>
+    <lastmod>2024-05-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>http://example.com/categories/DeepLearning/</loc>
+    <lastmod>2024-05-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/Paper/</loc>
+    <lastmod>2024-05-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 </urlset>
