@@ -1,3 +1,4 @@
+http://example.com/2024/05/13/Reinforcement-learning/
 http://example.com/2023/11/26/DeepLearning/
 http://example.com/2024/04/04/Parameter-count/
 http://example.com/2024/05/04/Mixed-percison-training/
@@ -8,5 +9,7 @@ http://example.com/tags/index.html
 http://example.com/
 http://example.com/tags/DeepLearning/
 http://example.com/tags/Train/
+http://example.com/tags/Reinforcement-learning/
 http://example.com/categories/DeepLearning/
 http://example.com/categories/Paper/
+http://example.com/categories/Reinforcement-learning/

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概念定义强化学习强化学习（Reinforcement learning，RL）讨论的问题是一个智能体(agent) 怎么在一个复杂不确定的 环境(environment) 里面去极大化它能获得的奖励。通过感知所处环境的 状态(state) 对 动作(action) 的 **反应(reward)**， 来指导更好的动作，从而获得最大的 **收益(return)**，这被称为在交互中学习，这样的学习方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reinforcement learning">
+<meta property="og:url" content="http://example.com/2024/05/13/Reinforcement-learning/index.html">
+<meta property="og:site_name" content="Llfeng">
+<meta property="og:description" content="概念定义强化学习强化学习（Reinforcement learning，RL）讨论的问题是一个智能体(agent) 怎么在一个复杂不确定的 环境(environment) 里面去极大化它能获得的奖励。通过感知所处环境的 状态(state) 对 动作(action) 的 **反应(reward)**， 来指导更好的动作，从而获得最大的 **收益(return)**，这被称为在交互中学习，这样的学习方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202061348504.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202080608917.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202091739796.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202071857303.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202071919418.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202081103918.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/image-20240425141747323.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/image-20240429112921398.png">
+<meta property="og:image" content="http://example.com/2024/05/13/Reinforcement-learning/image-20240507105034458.png">
+<meta property="article:published_time" content="2024-05-13T06:06:56.000Z">
+<meta property="article:modified_time" content="2024-05-13T06:20:55.290Z">
+<meta property="article:author" content="Llfeng">
+<meta property="article:tag" content="Reinforcement-learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/05/13/Reinforcement-learning/202202061348504.png">
+
+<link rel="canonical" href="http://example.com/2024/05/13/Reinforcement-learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>Reinforcement learning | Llfeng</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Llfeng</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-fw fa-download"></i>resources</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/13/Reinforcement-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/img.png">
+      <meta itemprop="name" content="Llfeng">
+      <meta itemprop="description" content="Welcome">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Llfeng">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Reinforcement learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-05-13 14:06:56 / 修改时间：14:20:55" itemprop="dateCreated datePublished" datetime="2024-05-13T14:06:56+08:00">2024-05-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement-learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概念定义"><a href="#概念定义" class="headerlink" title="概念定义"></a>概念定义</h2><h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><p>强化学习（Reinforcement learning，RL）讨论的问题是一个<strong>智能体(agent)</strong> 怎么在一个复杂不确定的 <strong>环境(environment)</strong> 里面去极大化它能获得的奖励。通过感知所处环境的 <strong>状态(state)</strong> 对 <strong>动作(action)</strong> 的 **反应(reward)**， 来指导更好的动作，从而获得最大的 **收益(return)**，这被称为在交互中学习，这样的学习方法就被称作强化学习。</p>
+<img src="/2024/05/13/Reinforcement-learning/202202061348504.png" alt="强化学习" style="zoom:67%;">
+
+<ul>
+<li>给定的环境中，有效动作的集合经常被称为动作空间(action space)，包括离散动作空间(discrete action spaces)和连续动作空间(continuous action spaces)，例如，走迷宫机器人如果只有东南西北这 4 种移动方式，则其为离散动作空间;如果机器人向 360◦ 中的任意角度都可以移动，则为连续动作空间。</li>
+</ul>
+<span id="more"></span>
+
+
+
+<h3 id="强化学习、监督学习和非监督学习"><a href="#强化学习、监督学习和非监督学习" class="headerlink" title="强化学习、监督学习和非监督学习"></a>强化学习、监督学习和非监督学习</h3><img src="/2024/05/13/Reinforcement-learning/202202080608917.png" alt="强化学习，监督学习，非监督学习" style="zoom:67%;">
+
+
+
+<p>强化学习是除了监督学习和非监督学习之外的第三种基本的机器学习方法。</p>
+<ul>
+<li><strong>监督学习</strong> 从标记好的输入-输出数据对中学习出一个映射函数(最小化损失)。<ul>
+<li><strong>应用示例</strong>：图像分类、情感分析、垃圾邮件检测等。</li>
+<li><strong>优点</strong>：当有<strong>充足</strong>的标注数据时，通常可以达到很高的准确率。</li>
+</ul>
+</li>
+<li><strong>非监督学习</strong> 寻找未标注数据中隐含模式、结构或规律性。<ul>
+<li><strong>应用示例</strong>：聚类、降维、异常检测等没有标注数据的场景，如基因表达数据分析、客户分群等。</li>
+<li><strong>自监督学习</strong> : 不需要外部提供的标签，而是通过数据本身生成监督信号来训练模型。这通常涉及到从输入数据中创建预测任务，如通过一部分数据预测另一部分数据。<ul>
+<li><strong>数据需求</strong>：不需要标注的数据，模型可以从未标注的数据中自我学习。</li>
+<li><strong>应用示例</strong>：语言模型预训练、图像中缺失部分的预测、视频中下一帧的预测等。</li>
+<li><strong>优点</strong>：能够利用大量未标注的数据，降低数据准备的成本和劳动强度。</li>
+<li><strong>缺点</strong>：生成的监督信号可能不如人工标注的数据准确，有时可能需要细致的策略来设计预测任务，以确保模型能学到有用的特征。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>强化学习</strong> 通过与环境的交互，学习一个策略，使得在该环境中获得的长期回报最大化。<ul>
+<li><strong>试错学习</strong>：强化学习一般没有直接的指导信息，Agent 要以不断与 Environment 进行交互，通过试错的方式来获得最佳策略(Policy)。</li>
+<li><strong>延迟回报</strong>：强化学习的指导信息很少，而且往往是在事后（最后一个状态(State)）才给出的。比如 围棋中只有到了最后才能知道胜负。</li>
+</ul>
+</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><img src="/2024/05/13/Reinforcement-learning/202202091739796.png" alt="强化学习应用" style="zoom:67%;">
+
+
+
+<h3 id="相关术语"><a href="#相关术语" class="headerlink" title="相关术语"></a>相关术语</h3><p>a –&gt; 动作(action)</p>
+<p>s –&gt; 状态(State)</p>
+<p>u –&gt; 回报(reward)</p>
+<p><strong>策略(Policy)</strong></p>
+<p>策略是智能体用于决定下一步执行什么行动的规则。</p>
+<p>可以是确定性的，一般表示为：$\mu$</p>
+<p>$a_t &#x3D; \mu(s_t)$</p>
+<p>也可以是随机的，一般表示为 $\pi$:</p>
+<p>$a_t \sim \pi(\cdot | s_t)$​</p>
+<p><strong>状态转移(State Transition)</strong></p>
+<p>状态转移，可以是确定的也可以是随机的，一般认为是随机的，其随机性来源于环境。可以用状态密度函数来表示：</p>
+<p>$p(s’ | s, a) &#x3D; P(S’ &#x3D; s’ | S &#x3D; s, A &#x3D; a)$</p>
+<p>环境可能会变化，在当前环境和行动下，衡量系统状态向某一个状态转移的概率是多少，注意环境的变化通常是未知的。</p>
+<p><strong>回报(Return)</strong></p>
+<p>回报又称cumulated future reward，一般表示为$U$，定义为</p>
+<p>$U_t &#x3D; R_t + R_{t+1} + R_{t+2} + R_{t+3} + \dots$</p>
+<p>其中$R_t$表示第t时刻的奖励，agent的目标就是让Return最大化。</p>
+<p>未来的奖励不如现在等值的奖励那么好（比如一年后给100块不如现在就给），所以$R_{t+1}$的权重应该小于$R_t$。因此，强化学习通常用discounted return（折扣回报，又称cumulative discounted future reward），取$\gamma$为discount rate（折扣率），$\gamma$∈(0,1]，则有，</p>
+<p>$U_t &#x3D; R_t + \gamma R_{t+1} + \gamma^2 R_{t+2} + \gamma^3 R_{t+3} + …$</p>
+<p><strong>价值函数(Value Function)</strong></p>
+<p>举例来说，在象棋游戏中，定义赢得游戏得1分，其他动作得0分，状态是棋盘上棋子的位置。仅从1分和0分这两个数值并不能知道智能体在游戏过程中到底下得怎么样，而通过价值函数则可以获得更多洞察。</p>
+<p><strong>价值函数使用期望对未来的收益进行预测，一方面不必等待未来的收益实际发生就可以获知当前状态的好坏，另一方面通过期望汇总了未来各种可能的收益情况</strong>。使用价值函数可以很方便地评价不同策略的好坏。</p>
+<img src="/2024/05/13/Reinforcement-learning/202202071857303.png" alt="价值函数" style="zoom: 40%;">
+
+<ul>
+<li><strong>状态价值函数</strong> 强调在特定状态下的长期价值。通常用于评估和比较不同状态的价值，以理解哪些状态是有利的。</li>
+<li><strong>动作价值函数</strong> 强调在特定状态下采取特定动作的长期价值。更多地用于制定或改进策略，因为它能够指导智能体在特定状态下选择最佳动作。</li>
+</ul>
+<h3 id="算法分类"><a href="#算法分类" class="headerlink" title="算法分类"></a>算法分类</h3><img src="/2024/05/13/Reinforcement-learning/202202071919418.png" alt="强化学习算法的分类" style="zoom: 67%;">
+
+
+
+<p><strong>按照环境是否已知划分：免模型学习（Model-Free） vs 有模型学习（Model-Based）</strong></p>
+<ul>
+<li><p><strong>Model-free</strong>就是不去学习和理解环境，环境给出什么信息就是什么信息</p>
+<ul>
+<li>policy optimization（策略优化）：找到一个策略，对于所有的状态s，它能选择能够最大化累积奖励的动作。<ul>
+<li>Proximal Policy Optimization（PPO 近端策略优化）：在提高样本效率和确保学习过程稳定性之间取得平衡。引入一种特别的目标函数，限制策略更新步骤中的变化幅度。如果策略改变过大，那么这个更新就会被“裁剪”到一个可接受的范围内，从而保证学习的稳定性。</li>
+</ul>
+</li>
+<li>Q-learning：学习一个动作价值函数Q来估计在给定状态下采取特定动作的期望效用。</li>
+</ul>
+</li>
+<li><p><strong>Model-Based</strong>是去学习和理解环境，学会用一个模型来模拟环境，通过模拟的环境来得到反馈。环境可以准确建模的时候更好。</p>
+<ul>
+<li>动态规划（Dynamic Programming）和蒙特卡洛树搜索（Monte Carlo Tree Search, MCTS）</li>
+</ul>
+</li>
+<li><p>Model-Based相当于比Model-Free多了模拟环境这个环节，通过模拟环境预判接下来会发生的所有情况，然后选择最佳的情况。</p>
+</li>
+</ul>
+<ul>
+<li>一般情况下，环境都是不可知的，所以这里主要研究无模型问题。</li>
+</ul>
+<p><strong>按照学习方式划分：在线策略（On-Policy） vs 离线策略（Off-Policy）</strong></p>
+<ul>
+<li><strong>On-Policy（保守的算法） <strong>在线策略是指智能体在学习和决策过程中</strong>使用同一策略</strong>。<strong>智能体在探索的同时收集数据，并且直接使用这些数据来改进其当前策略</strong>。这意味着智能体需要在探索（尝试新事物）和利用（使用已知最佳策略）之间找到平衡。典型的算法为Sarsa。适合于可以安全探索且实时更新策略的场景。</li>
+<li><strong>Off-Policy（贪婪的算法）</strong> 允许智能体使用与当前学习策略<strong>不同的策略来探索环境</strong>。<strong>智能体可以从通过不同策略生成的数据中学习，这些数据可以是之前收集的历史数据，也可以是同时运行的其他策略产生的数据</strong>。典型的方法是Q-learning，以及Deep-Q-Network。适合于那些探索成本高昂或有潜在危险的环境</li>
+</ul>
+<p><strong>按照学习目标划分：基于策略（Policy-Based）和基于价值（Value-Based）。</strong></p>
+<img src="/2024/05/13/Reinforcement-learning/202202081103918.png" alt="基于策略VS基于价值" style="zoom: 33%;">
+
+<ul>
+<li><p><strong>Policy-Based</strong> 直接学习一个策略（policy），策略定义了在给定状态下智能体应该采取的动作。但不一定概率最高就会选择该动作，还是会从整体进行考虑。适用于非连续和连续的动作。常见的方法有Policy gradients。</p>
+</li>
+<li><p><strong>Value-Based</strong> 学习价值函数（状态价值函数和动作价值函数），选择价值最高的动作。适用于非连续的动作。常见的方法有Q-learning、Deep Q Network和Sarsa。</p>
+</li>
+<li><p>二者结合：Actor-Critic，Actor根据概率做出动作，Critic根据动作给出价值，从而加速学习过程。适用于非连续和连续的动作。常见的有A2C，A3C，DDPG等。</p>
+</li>
+<li><p>基于表格、没有神经网络参与的Q-Learning算法</p>
+</li>
+<li><p>基于价值(Value-Based)的Deep Q Network（DQN）算法</p>
+</li>
+<li><p>基于策略(Policy-Based)的Policy Gradient（PG）算法</p>
+</li>
+<li><p>结合了Value-Based和Policy-Based的Actor Critic算法。</p>
+</li>
+</ul>
+<h2 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h2><p>一开始会建模出一个r表（reward），维度为 S * A，表中每个数代表在当前状态S下可以采用动作A的即时奖励</p>
+<p>然后初始化一个全为0的Q表，维度同样为 S * A，表中每个数代表在当前状态S下可以采用动作A可以获得的未来收益的折现和。通过断的迭代Q值表使其最终收敛，然后根据Q值表就可以在每个状态下选取一个最优策略。</p>
+<p>使用以下更新规则来学习Q值：</p>
+<p>$Q(s, a) &#x3D; Q(s, a) + \alpha [r(s, a) + \gamma \max_{a’} Q(s’) - Q(s, a)]$</p>
+<ul>
+<li>$Q(s, a)$是当前状态s下作出动作a的未来收益的折现和。</li>
+<li>$\alpha$ 是学习率（0 &lt; $\alpha$ ≤ 1），控制学习过程中新信息的权重。当学习率为1时公式简化为$Q(s, a) &#x3D; r + \gamma \max_{a’} Q(s’, a’) $，即每次更新Q值与之前的Q值无关</li>
+<li>$r(s, a)$ 是前状态s下作出动作a下的即时奖励。</li>
+<li>$\gamma$是折扣因子（0 ≤ $\gamma$ &lt; 1），用于平衡即时奖励和未来奖励的重要性。越大代表未来奖励越重要。</li>
+<li>$s’$ 是采取动作(a)后转移到的新状态，$\max_{a’} Q(s’)$ 是新状态$s’$下<strong>所有可能动作$a’$的最大Q值</strong>。</li>
+<li>每轮迭代可以随机选择下个动作，或者根据Q值选择下个动作，具体怎么选择要根据搜索和Q值最大化权衡。</li>
+<li>Sarsa(State-Action-Reward-State-Action) 算法不使用$max_{a’} Q(s’)$ 而是选择的 $ Q(s’, a’)$ 来更新Q值，因此Sarsa算法是on-policy（在线学习），而 Q learning更新Q值的不一定是选择的下一步的值，而是取可选择的最大值，也叫作 Off-policy（离线学习）</li>
+<li>Sarsa-lambda，lambda ($\gamma$)是在 [0, 1] 之间取值，lambda &#x3D; 0代表单步更新(Sarsa-lambda(0) &#x3D; Sarsa)，lambda &#x3D; 1代表回合更新，lambda值越靠近1代表选择越多的步数<ul>
+<li>更新迹：$ E(s, a) &#x3D; E(s, a) + 1 $ 或者$ E(s, :) &#x3D; 0$  $E(s, a) &#x3D; 1 $  </li>
+<li>更新所有价值：$ Q &#x3D; Q + \alpha \delta E $，其中 $ \delta &#x3D; r(s, a) + \gamma Q(s’, a’) - Q(s, a) $</li>
+<li>迹衰减： $ E(s, a) &#x3D; \gamma \lambda E(s, a) $。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/itplus/article/details/9361915">Q-learning示例</a> <a target="_blank" rel="noopener" href="https://mofanpy.com/tutorials/machine-learning/reinforcement-learning/tabular-sarsa-lambda#%E5%AD%A6%E4%B9%A0">Sarsa-lambda</a></li>
+</ul>
+<h2 id="Deep-Q-Network"><a href="#Deep-Q-Network" class="headerlink" title="Deep Q Network"></a>Deep Q Network</h2><p>当状态和动作空间是离散且维数不高时，Q-learning可使用Q-Table储存每个状态动作对的Q值，而当状态和动作空间是高维连续时，无法构建可以存储超大状态空间的Q_table。将状态和动作当成神经网络的输入，然后经过神经网络分析后得到动作的 Q 值就是Deep Q Network</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Q-learning</td>
+<td>s + a1</td>
+<td>a1-value</td>
+</tr>
+<tr>
+<td>Deep Q Network</td>
+<td>s</td>
+<td>a1-value &#x2F; a2-value …&#x2F; an-value(取最大值为动作)</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Q-learning也可以看成输入s，输出所有动作的a-value，然后取一个大值</li>
+</ul>
+<p>神经网络架构为 n_features -&gt; neural network -&gt;n_actions(每个动作的得分)</p>
+<ul>
+<li><p>n_features 代表环境的特征数量，即环境的维度</p>
+</li>
+<li><p>n_actions 代表输出的动作数量</p>
+</li>
+<li><p>Experience Replay（经验回放）</p>
+<ul>
+<li>存储每个状态、动作、奖励和下一个状态的组合。在训练网络时，随机从存储中抽取一批历史数据进行学习。</li>
+</ul>
+</li>
+<li><p>Fixed Q-targets（固定Q目标）</p>
+<ul>
+<li>在传统Q-learning中，目标Q值$Q(s’, a’)$是实时计算的。意味着每次迭代都可能变化，这会导致学习过程中的振荡和不稳定性。</li>
+<li>DQN引入主网络（Online Network）: 负责每步迭代中Q值的实际计算和策略的决定。</li>
+<li>目标网络（Target Network）: 在训练过程中保持不变，用于计算目标Q值。目标网络的权重定期从主网络复制过来，比如每隔1000次迭代更新一次。让主网络的输出来拟合目标网络的输出，只更新对应动作的输出</li>
+<li>在更新Q值的时候，目标Q值使用的是目标网络的输出，而不是主网络的。$ Q_{\text{更新}}(s_t, a_t) &#x3D; Q_{\text{主}}(s_t, a_t) + \alpha \left[ r(s_t, a_t) + \gamma \max_{a} Q_{\text{目标}}(s_{t+1}) - Q_{\text{主}}(s_t, a_t) \right] $</li>
+</ul>
+</li>
+</ul>
+<h3 id="Double-DQN-算法"><a href="#Double-DQN-算法" class="headerlink" title="Double DQN 算法"></a>Double DQN 算法</h3><p>DQN 算法因为用了固定Q目标，$Q_{\text{目标}}(s_{t+1}, a_{t+1})$ 是目标网络（Target Network）的输出，而目标网络（Target Network）是多轮迭代后才从主网络（Online Network）复制过来，因此训练主网络的时候 $max_{a} Q_{\text{目标}}(s_{t+1})$ ，不一定与 $max_{a} Q_{\text{主}}(s_{t+1})$  一致。由于噪声和估计误差累积，导致过高估计（overestimation）某些动作值的问题。</p>
+<ul>
+<li>因此Double DQN 算法使用主网络的 $max_{a} Q_{\text{主}}(s_{t+1})$ 选择最大值的动作 $a_{t+1}$，然后使用目标网络 $Q_{\text{目标}}(s_{t+1}, a_{t+1})$​ 来更新Q值</li>
+<li>这种分离的方式可以减少由于选择和评价使用同一个估计值所带来的正偏误差，从而提高学习的稳定性和性能。</li>
+</ul>
+<h3 id="Prioritized-Experience-Replay-DQN"><a href="#Prioritized-Experience-Replay-DQN" class="headerlink" title="Prioritized Experience Replay (DQN)"></a>Prioritized Experience Replay (DQN)</h3><p>使用 MountainCar 来进行实验，对于 reward 函数</p>
+<ul>
+<li>之前：<code>reward = abs(position - (-0.5))     # 车开得越高 reward 越大r in [0, 1]</code><ul>
+<li>batch 随机从Memory 中抽取数据集</li>
+</ul>
+</li>
+<li>现在：只要是没有到顶 reward&#x3D;-1，到顶时  reward&#x3D;10. <ul>
+<li>batch 根据Memory 中的样本优先级来抽</li>
+<li><code>TD-error = abs(q_target - q_eval)</code>，越大代表这个样本就越需要被学习，每轮采样结束进行更新，$priority &#x3D; TDerror^{alpha}$ $ alpha \in [0-1]$</li>
+</ul>
+</li>
+</ul>
+<p>带priority的数据结构SumTree</p>
+<img src="/2024/05/13/Reinforcement-learning/image-20240425141747323.png" alt="image-20240425141747323" style="zoom:50%;">
+
+<ul>
+<li>SumTree是完美二叉树，节点数量为2 * capacity - 1，capacity 为 memory 大小，图示capacity 为 8。同时还有一个长度为 capacity 的数组用于保存data，与SumTree叶子节点一一映射，下面不赘述</li>
+<li>SumTree的父节点值等于其子节点的和</li>
+<li>数据增加：根据当前的data_pointer来选择插入位置，若data_pointer &gt;&#x3D; capacity则从头插入，新插入的数据的 priority 为SumTree叶子节点的最大值，然后根据插入位置已有的值与新数据的值的差来逐个更新父节点</li>
+<li>数据查找：假设抽取数据量为6，<code>n = tree[0] / batch_size = 42 / 6</code>，分为<code>[0-7), [7-14), [14-21), [21-28), [28-35), [35-42]</code>6个区间，然后在每个区间里随机选取一个数，<ul>
+<li>比如在区间 <code>[21-28)</code> 里随机选到了24，就按照这个 24 从最顶上的42开始向下搜索如图。搜索的逻辑是，如果搜索的值小于当前节点的左子节点，当前节点 &#x3D; 左子节点，否则搜索的值减去当前节点的左子节点，当前节点 &#x3D; 右子节点，直到SumTree叶子节点</li>
+</ul>
+</li>
+</ul>
+<p>​	</p>
+<p>因为Prioritized Experience Replay是误差越大越频繁采样，在误差反向传播时loss会乘以 IS weights 得到适当的缩减，以避免过拟合。</p>
+<ul>
+<li>$ISWeights &#x3D; (p&#x2F;minprob)^{-beta}$<ul>
+<li>minprob为SumTree叶子节点的最小值</li>
+<li>beta重要性抽样。当 beta &#x3D; 0 时，不进行任何偏差校正，学习初期有助于稳定学习过程。随着模型的训练和收敛，逐渐增加 beta值（最终接近于 1）有助于提高样本权重的精确度，增强偏差校正的效果，从而使学习过程更加准确和高效。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Dueling-DQN"><a href="#Dueling-DQN" class="headerlink" title="Dueling DQN"></a>Dueling DQN</h3><ul>
+<li>DQN适合于动作与状态价值强相关的任务，每个动作的价值差异显著。</li>
+<li>Dueling DQN适用于那些状态价值信息更为重要，或者动作之间的差异不是非常大的场景。<ul>
+<li>神经网络架构为 n_features -&gt; neural network -&gt;n_actions 和 n_features -&gt; neural network -&gt;1 两个neural network仅仅最后一层映射到输出不一样</li>
+<li>$Q(s, a) &#x3D; V(s) + A(s, a) - \text{mean}(A(s, \cdot))$ ，V状态价值函数，A动作价值函数</li>
+</ul>
+</li>
+</ul>
+<h2 id="Policy-Gradients"><a href="#Policy-Gradients" class="headerlink" title="Policy Gradients"></a>Policy Gradients</h2><p>Deep Q-Learning根据状态选计算每个动作的价值，选最高价值的动作，适用于离散动作空间和策略确定性</p>
+<p>Policy Gradient根据状态选动作，利用reward奖励直接对选择行为的可能性进行增强和减弱，好的行为会被增加下一次被选中的概率，不好的行为会被减弱下次被选中的概率。适用于连续动作空间和策略随机性</p>
+<ul>
+<li>也称REINFORCE：全称 REward Increment &#x3D; Nonnegative Factor times Offset Reinforcement times Characteristic Eligibility，奖励增量&#x3D;非负因子次数抵消强化次数特征适格性</li>
+</ul>
+<img src="/2024/05/13/Reinforcement-learning/image-20240429112921398.png" alt="image-20240429112921398" style="zoom: 33%;">
+
+
+
+<p>$ \theta &#x3D; \theta + \alpha \sum_{t&#x3D;0}^T \nabla_\theta \log \pi_\theta(a_t|s_t) v_t   $</p>
+<ul>
+<li><p>策略 $\pi_\theta(a|s)$，在给定状态 s 下选择动作 a 的概率，$\theta$​ 是策略的参数。策略的目标是来最大化累积奖励。</p>
+</li>
+<li><p>$\nabla_\theta$代表对$\theta$求梯度因此 $ \nabla_\theta \log \pi_\theta(a|s) &#x3D; \frac{\nabla_\theta \pi_\theta(a|s)}{\pi_\theta(a|s)} $，使用对数概率将概率乘积转换为和，提升数值稳定性，通过调整 $\theta$ 来优化策略，使得期望回报最大化</p>
+<ul>
+<li>$v_t$​ 是从时间 t 到轨迹结束的累积回报。</li>
+</ul>
+</li>
+<li><p>$\log $ 以 e为底数，单调递增。</p>
+</li>
+<li><p>存储每个状态、动作、奖励的组合。不存储下一个状态。每回合结束都清空存储。</p>
+</li>
+</ul>
+<p>神经网络架构为 n_features -&gt; neural network -&gt;actions_probability(softmax得到每个动作的概率)</p>
+<ul>
+<li>未softmax的actions_probability 与 每个回合选择的动作比误差，得到 -log p</li>
+<li>用-log p * v(当前奖励 + 未来衰减奖励)，计算得出所有样本的平均损失</li>
+<li>最大化reward也就是最小化 -log p * v，然后做梯度下降，若 $\pi_\theta(a|s)$越小， $-\log\pi_\theta(a|s)$越大，此时若 $v$ 越大，表示概率越小的策略，reward越大，不符合预期，loss越高，因此对参数要大幅度更新</li>
+</ul>
+<h3 id="Proximal-Policy-Optimization"><a href="#Proximal-Policy-Optimization" class="headerlink" title="Proximal Policy Optimization"></a>Proximal Policy Optimization</h3><p>解决 Policy Gradient 不好确定 Learning rate (或者 Step size) 的问题。Step Size 太大不收敛，太小训练时间很长。</p>
+<ul>
+<li>PPO-Penalty通过调整目标函数中的KL散度项的系数来控制策略更新的幅度</li>
+<li>PPO-Clip直接对策略比率进行裁剪，以保持更新步骤在一定的界限内。</li>
+</ul>
+<p>Actor 部分输出单个动作，然后获取正态分布的参数列表$acts_prob$，对应的正态分布参数sigma也可以从网络出</p>
+<p>Critic 部分与Actor-Critic部分一样 </p>
+<p>$ loss_{chip} &#x3D;  -mean(\min(r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1 - \epsilon, 1 + \epsilon) \hat{A}_t) ) $</p>
+<ul>
+<li>$r_t(\theta)&#x3D; \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}&#x3D;\frac{acts_prob_\theta[a]}{acts_prob[a]<em>{\theta</em>{old}}+e^{-5}} $ 是新策略和旧策略概率比率的函数。</li>
+<li>$\hat{A}_t $是优势函数即 $td_{error}$，用来评估动作$a_t$在状态$s_t$下相对于平均表现的优势。</li>
+<li>$\text{clip}(r_t(\theta), 1 - \epsilon, 1 + \epsilon)$ 限制$r_t(\theta)$在$(1 - \epsilon)$到$(1 + \epsilon)$的范围内，防止策略更新幅度过大。</li>
+<li>$\epsilon $是一个小常数（例如0.1或0.2），用来定义裁剪的界限。</li>
+</ul>
+<p>$ loss_{kl} &#x3D;  -mean(r_t(\theta) \hat{A}<em>t - \lambda *  D</em>{KL}(\pi_{\theta_{old}} \parallel \pi_\theta)) $</p>
+<ul>
+<li><p>KL散度（Kullback-Leibler Divergence），也被称为相对熵，衡量了在给定一个真实概率分布 P 的情况下，使用一个不同的概率分布( Q 来描述这些数据的效率损失</p>
+<ul>
+<li><p>P 对 Q 的KL散度定义为：$ D_{KL}(P \parallel Q) &#x3D; \sum_{x} P(x) \log \frac{P(x)}{Q(x)} $</p>
+<ul>
+<li><p>非负性：$ D_{KL}(P \parallel Q) \geq 0 $。当且仅当 P 和 Q 完全相同时，$ D_{KL}(P \parallel Q) &#x3D; 0 $。</p>
+</li>
+<li><p>非对称性：通常$ D_{KL}(P \parallel Q) \neq D_{KL}(Q \parallel P) $。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>$\lambda$ 是一个自适应变化的值，$D_{KL}(\pi_{\theta_{old}} \parallel \pi_\theta))$ 较小，则 $\lambda$ 增大，反之亦然，让每次更新都在一个范围内</p>
+</li>
+</ul>
+<h2 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor-Critic"></a>Actor-Critic</h2><p>Policy Gradients 是回合更新，Actor-Critic通过Critic对状态进行评估得以单步更新。 <code>Actor</code> 基于概率选行为, <code>Critic</code> 基于 <code>Actor</code> 的行为评判行为的得分, <code>Actor</code> 根据 <code>Critic</code> 的评分修改选行为的概率。</p>
+<p>Actor 策略选择动作</p>
+<ul>
+<li>神经网络架构为 state-&gt; neural network -&gt; acts_prob<ul>
+<li>输入 $a$ 、 $td_error$ 和 $s$， 将$s$ 带入神经网络得到 acts_prob </li>
+<li>choose_action ：根据acts_prob 的概率随机选一个动作</li>
+<li>$loss &#x3D; -log(acts_prob[a]) * td_error$</li>
+</ul>
+</li>
+</ul>
+<p>Critic 状态价值函数</p>
+<ul>
+<li><p>神经网络架构为 state-&gt; neural network -&gt; value</p>
+<ul>
+<li><p>输入$r$ 、 $s$ 和 $s_{next}$ ，将 $s$ 和 $s_{next}$ 带入神经网络得到 $V_{eval}$和$V_{next}$ 和</p>
+</li>
+<li><p>$td_{error} &#x3D; (r + \gamma* V_{next}) - V_{eval}$</p>
+</li>
+<li><p>$loss &#x3D; {td_{error}}^2$</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>如果 $td_error$ （比平时好多少）较大</p>
+<ul>
+<li>Critic 函数：对当前状态价值估计与实际接收到的奖励加上折扣未来价值之间的偏差误差较大，因此需要减小$td_error$​</li>
+<li>Actor 函数：对当前动作a的概率较小时候，$td_error$ 较大，说明这个动作是一个好的动作，因此不符合预期，因此需要拟合上去</li>
+</ul>
+<h3 id="Deep-Deterministic-Policy-Gradient"><a href="#Deep-Deterministic-Policy-Gradient" class="headerlink" title="Deep Deterministic Policy Gradient"></a>Deep Deterministic Policy Gradient</h3><p>DDPG的Actor直接输出一个确定的动作，能够在连续动作上更有效地学习。</p>
+<ul>
+<li>DDPG的策略是确定性的，它通常通过在选择的动作上加入噪声来引入探索性，例如以输出动作a为中心，标准差var正态分布中生成一个值，var随训练递减</li>
+<li>使用经验回放（s, a, r, s_）</li>
+</ul>
+<p>正态分布示意图</p>
+<img src="/2024/05/13/Reinforcement-learning/image-20240507105034458.png" alt="image-20240507105034458" style="zoom: 43%;">
+
+
+
+
+
+
+
+<p>Actor 策略选择动作，目标Q值最大化</p>
+<ul>
+<li>eval和target网络架构为 state-&gt; neural network -&gt; action<ul>
+<li>输入 $\frac{dQ}{da}$ 、$s$ 和 $s_$， 将$s$ 和 $s_$分别带入eval和target网络得到$a$ 和 $a_$</li>
+<li>choose_action ：根据选择的动作上加入噪声</li>
+<li>$loss &#x3D; \frac{dQ}{dparams} &#x3D; \frac{dQ}{da} * \frac{da}{dparams}$<ul>
+<li>$\frac{dQ}{da}$ 来自 Critic eval网络</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Critic 状态价值函数</p>
+<ul>
+<li><p>eval和target网络架构为 state + action -&gt; neural network -&gt; q_value</p>
+<ul>
+<li><p>action 来自 Actor网络</p>
+</li>
+<li><p>输入$r$ 、 $s$  $a$和 $s_$ $a_$ ，将 $s$  $a$和 $s_$  $a_$分别带入eval和target网络得到 $Q$和$Q_$ ，同时输出$dQ&#x2F;da$ </p>
+</li>
+<li><p>${td_{error}} &#x3D; (r + \gamma* Q_) - Q$</p>
+</li>
+<li><p>$loss &#x3D; {td_{error}}^2$</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>eval和target网络的更新</p>
+<ul>
+<li>软更新：每次迭代完执行$ \theta_{\text{target}} &#x3D; \tau \theta_{\text{eval}} + (1 - \tau) \theta_{\text{target}} $，$\tau$​ 是一个很小的正数（如0.001）</li>
+<li>硬更新：一定迭代次数后，直接用eval网络替换target网络</li>
+</ul>
+<h3 id="Asynchronous-Advantage-Actor-Critic"><a href="#Asynchronous-Advantage-Actor-Critic" class="headerlink" title="Asynchronous Advantage Actor-Critic"></a>Asynchronous Advantage Actor-Critic</h3><p>创建多个并行的环境，让多个拥有副结构的 agent 同时在这些并行环境上更新主结构（Global_Net）中的参数。并行中的 agent 们互不干扰，而主结构的参数更新受到副结构提交更新的不连续性干扰，所以更新的相关性被降低，收敛性提高。</p>
+<ul>
+<li>push：$\frac{d_loss}{d_params}$更新Global_Net</li>
+<li>pull：copy Global_Net真实参数</li>
+<li>可以让标准差var从actor网络输出</li>
+</ul>
+<h2 id="Direct-Preference-Optimization"><a href="#Direct-Preference-Optimization" class="headerlink" title="Direct Preference Optimization"></a>Direct Preference Optimization</h2><p>RLHF需要训练RewardModel，需要像DDPG一样，采用4个模型，而DPO(直接偏好优化)只需要Actor的主模型和基准模型更为简易</p>
+<ul>
+<li>还有一种说法DPO是贪心搜索 (Greedy Search)选择局部最优解，RLHF是启发式搜索 (Heuristic Search)考虑全局最优</li>
+</ul>
+<p>$  loss &#x3D; -\log\sigma\left(\beta\log\frac{\pi_\theta(y_w|x)}{\pi_{ref}(y_w|x)} - \beta\log\frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}\right) $</p>
+<ul>
+<li><p>优化目标是让生成好的回答可能性相对于生成坏的回答的可能性更大，</p>
+</li>
+<li><p>$\sigma$：sigmoid函数</p>
+</li>
+<li><p>$\beta$ ：超参数，一般在0.1 - 0.5之间</p>
+</li>
+<li><p>$y_w$ ：某条偏好数据中好的response，w就是win的意思</p>
+</li>
+<li><p>$y_l$ ：某条偏好数据中差的response，l就是loss的意思，所以偏好数据也叫comparision data</p>
+</li>
+<li><p>$\pi_\theta(y_w|x)$：给定输入x, 当前policy model生成好的response的累积概率(每个tokne的概率求和)</p>
+</li>
+<li><p>$\pi_{ref}(y_w|x)$ ：给定输入x, 原始模型(reference model)生成好的response的累积概率，使用的目的类似与KL散列，减小更新幅度</p>
+</li>
+</ul>
+<p>参考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://imzhanghao.com/2022/02/10/reinforcement-learning/">https://imzhanghao.com/2022/02/10/reinforcement-learning/</a></li>
+<li><a target="_blank" rel="noopener" href="https://mofanpy.com/tutorials/machine-learning/reinforcement-learning/">https://mofanpy.com/tutorials/machine-learning/reinforcement-learning/</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/642569664">https://zhuanlan.zhihu.com/p/642569664</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Llfeng
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2024/05/13/Reinforcement-learning/" title="Reinforcement learning">http://example.com/2024/05/13/Reinforcement-learning/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reinforcement-learning/" rel="tag"># Reinforcement-learning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/05/04/Mixed-percison-training/" rel="prev" title="Mixed percison training">
+      <i class="fa fa-chevron-left"></i> Mixed percison training
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81OTEwMi8zNTU2NA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">概念定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.1.</span> <span class="nav-text">强化学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E3%80%81%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E5%92%8C%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.2.</span> <span class="nav-text">强化学习、监督学习和非监督学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.4.</span> <span class="nav-text">相关术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="nav-number">1.5.</span> <span class="nav-text">算法分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-Learning"><span class="nav-number">2.</span> <span class="nav-text">Q-Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Q-Network"><span class="nav-number">3.</span> <span class="nav-text">Deep Q Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Double-DQN-%E7%AE%97%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">Double DQN 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prioritized-Experience-Replay-DQN"><span class="nav-number">3.2.</span> <span class="nav-text">Prioritized Experience Replay (DQN)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dueling-DQN"><span class="nav-number">3.3.</span> <span class="nav-text">Dueling DQN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Gradients"><span class="nav-number">4.</span> <span class="nav-text">Policy Gradients</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Proximal-Policy-Optimization"><span class="nav-number">4.1.</span> <span class="nav-text">Proximal Policy Optimization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Actor-Critic"><span class="nav-number">5.</span> <span class="nav-text">Actor-Critic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Deep-Deterministic-Policy-Gradient"><span class="nav-number">5.1.</span> <span class="nav-text">Deep Deterministic Policy Gradient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Asynchronous-Advantage-Actor-Critic"><span class="nav-number">5.2.</span> <span class="nav-text">Asynchronous Advantage Actor-Critic</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Direct-Preference-Optimization"><span class="nav-number">6.</span> <span class="nav-text">Direct Preference Optimization</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Llfeng"
+      src="/images/img.png">
+  <p class="site-author-name" itemprop="name">Llfeng</p>
+  <div class="site-description" itemprop="description">Welcome</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Llfeng18" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Llfeng18" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1481314343@qq.com" title="E-Mail → mailto:1481314343@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2023-10 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Llfeng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">28k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">26 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
